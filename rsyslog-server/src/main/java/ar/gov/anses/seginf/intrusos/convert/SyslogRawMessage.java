@@ -2,7 +2,7 @@ package ar.gov.anses.seginf.intrusos.convert;
 
 import java.util.Date;
 
-public class SyslogMessage {
+public class SyslogRawMessage {
 	private SyslogFacility facility;
 	private SyslogSeverity severity;
 	private String remoteAddress;

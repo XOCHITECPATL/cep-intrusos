@@ -41,7 +41,7 @@ public final class Rfc3164SyslogConverter {
         //Utility class
     }
 
-    public static String toString(SyslogMessage message) {
+    public static String toString(SyslogRawMessage message) {
         StringBuilder sbr = new StringBuilder();
         sbr.append("<");
         if (message.getFacility() == null) {
@@ -111,16 +111,16 @@ public final class Rfc3164SyslogConverter {
         return sbr.toString();
     }
 
-    public static SyslogMessage toSyslogMessage(String body) {
+    public static SyslogRawMessage toSyslogMessage(String body) {
         return parseMessage(body.getBytes());
     }
 
-    public static SyslogMessage parseMessage(byte[] bytes) {
+    public static SyslogRawMessage parseMessage(byte[] bytes) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
         byteBuffer.put(bytes);
         byteBuffer.rewind();
 
-        SyslogMessage syslogMessage = new SyslogMessage();
+        SyslogRawMessage syslogMessage = new SyslogRawMessage();
         Character charFound = (char) byteBuffer.get();
 
         while (charFound != '<') {
