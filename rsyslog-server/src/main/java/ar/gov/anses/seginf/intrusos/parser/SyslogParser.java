@@ -12,7 +12,7 @@ public class SyslogParser {
 		String content = syslogRawMessage.getLogMessage();
 		
 		SyslogContentParser parser = this.instantianteSyslogContentParser(content);
-		parser.parser(syslogRawMessage);
+		parser.parse(syslogRawMessage);
 		
 	}
 

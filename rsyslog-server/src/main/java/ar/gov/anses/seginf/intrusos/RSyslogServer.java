@@ -26,7 +26,7 @@ public class RSyslogServer {
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
 		
 		//Start cep engine
-		final CEPEngine engine = new CEPEngine();
+		final CEPEngine engine = CEPEngine.getInstance();
 		engine.initEngine();
 
 		// Set up the pipeline factory.

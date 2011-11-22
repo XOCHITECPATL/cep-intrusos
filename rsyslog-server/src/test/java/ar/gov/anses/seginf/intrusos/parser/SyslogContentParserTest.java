@@ -7,7 +7,8 @@ public class SyslogContentParserTest{
 
 	@Test
 	public void testSudoCommand() {
-		LinuxSyslogContentParser parser = new LinuxSyslogContentParser("sudo:    gbrey : TTY=pts/1 ; PWD=/home/gbrey ; USER=root ; COMMAND=/bin/cat /var/log/message");
+		LinuxSyslogContentParser parser = new LinuxSyslogContentParser();
+		parser.createMap("sudo:    gbrey : TTY=pts/1 ; PWD=/home/gbrey ; USER=root ; COMMAND=/bin/cat /var/log/message");
 		assertEquals("sudo",parser.getLogReporter());
 		assertEquals("gbrey",parser.getUser());
 		assertEquals("pts/1",parser.getParams().get("TTY"));

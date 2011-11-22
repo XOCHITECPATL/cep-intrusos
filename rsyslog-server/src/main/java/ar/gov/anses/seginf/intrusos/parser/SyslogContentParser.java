@@ -5,10 +5,18 @@ import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
 
 public abstract class SyslogContentParser {
 
-	public abstract SyslogEvent parser(SyslogRawMessage syslogRawMessage);
+	public abstract SyslogEvent parse(SyslogRawMessage syslogRawMessage);
 
 	protected SyslogEvent buildSyslogEvent(SyslogRawMessage syslogRawMessage) {
-		return null;
+		SyslogEvent event = new SyslogEvent();
+
+		event.setFacility(syslogRawMessage.getFacility());
+		event.setHostname(syslogRawMessage.getHostname());
+		event.setLocalAddress(syslogRawMessage.getLocalAddress());
+		event.setRemoteAddress(syslogRawMessage.getRemoteAddress());
+		event.setSeverity(syslogRawMessage.getSeverity());
+
+		return event;
 	}
 
 }

@@ -1,6 +1,8 @@
 package ar.gov.anses.seginf.intrusos.routing;
 
 import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
+import ar.gov.anses.seginf.intrusos.parser.LinuxSyslogContentParser;
+import ar.gov.anses.seginf.intrusos.parser.SyslogContentParser;
 
 /**
  * 
@@ -16,8 +18,8 @@ public class SyslogMessageRouter {
 	public SyslogMessageRouter() {
 	}
 	
-	public void route(SyslogRawMessage message){
-		
+	public SyslogContentParser route(SyslogRawMessage message){
+		return new LinuxSyslogContentParser();
 	}
 	
 

@@ -5,6 +5,8 @@ import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseConfiguration;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
+import org.drools.builder.KnowledgeBuilderError;
+import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.conf.EventProcessingOption;
@@ -15,6 +17,14 @@ import org.drools.runtime.conf.ClockTypeOption;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 
 public class CEPEngine {
+
+	private static CEPEngine instance;
+
+	public static CEPEngine getInstance() {
+		if (instance == null)
+			instance = new CEPEngine();
+		return instance;
+	}
 
 	public WorkingMemoryEntryPoint ep;
 	public StatefulKnowledgeSession ksession;
@@ -43,6 +53,15 @@ public class CEPEngine {
 				.newKnowledgeBuilder();
 		kbuilder.add(ResourceFactory.newClassPathResource(rulesFile,
 				this.getClass()), ResourceType.DRL);
+
+		// Verificacion de errores
+		KnowledgeBuilderErrors errors = kbuilder.getErrors();
+		if (errors.size() > 0) {
+			for (KnowledgeBuilderError error : errors) {
+				System.err.println(error);
+			}
+			throw new IllegalArgumentException("Could not parse knowledge.");
+		}
 
 		// Configures the Stream mode
 		KnowledgeBaseConfiguration conf = KnowledgeBaseFactory

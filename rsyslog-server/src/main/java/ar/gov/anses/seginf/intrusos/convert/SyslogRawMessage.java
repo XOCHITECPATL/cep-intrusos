@@ -68,12 +68,12 @@ public class SyslogRawMessage {
 		this.hostname = hostname;
 	}
 
-	@Override
-	public String toString() {
-		return "SyslogMessage{<facility>" + facility.toString()+"</facility>" 
-				+ ", severity=" + severity + ", remoteAddress='"
-				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'" + ", hostname='" + hostname + "'" + ", messageTime=" + timestamp
-				+ "<content>"+this.logMessage.trim()+"</content>"  
-				+ '}';
-	}
+//	@Override
+//	public String toString() {
+//		return "SyslogMessage{<facility>" + facility.toString()+"</facility>" 
+//				+ ", severity=" + severity + ", remoteAddress='"
+//				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'" + ", hostname='" + hostname + "'" + ", messageTime=" + timestamp
+//				+ "<content>"+this.logMessage.trim()+"</content>"  
+//				+ '}';
+//	}
 }

@@ -11,11 +11,11 @@ end
 
 rule "Dump messages"
 when
-    $s : SyslogEvent() from entry-point "syslog"
+    $s  SyslogEvent() from entry-point "syslog"
 then
     System.out.println( MessageFormat.format( "[{0,time,full}] @{1}",
                                               $s.getSubsystem(),
                                               $s.getUser() ) );
-                                               System.out.println("CORRARELO");
+                                               System.out.println("CORRARELO1");
 end
 
