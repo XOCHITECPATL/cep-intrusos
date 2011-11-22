@@ -15,6 +15,7 @@ import org.drools.runtime.conf.ClockTypeOption;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 
 public class CEPEngine {
+
 	public WorkingMemoryEntryPoint ep;
 	public StatefulKnowledgeSession ksession;
 
@@ -40,8 +41,8 @@ public class CEPEngine {
 		// Parses and compiles the rules file
 		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
 				.newKnowledgeBuilder();
-		kbuilder.add(ResourceFactory.newClassPathResource(rulesFile,this.getClass()),
-				ResourceType.DRL);
+		kbuilder.add(ResourceFactory.newClassPathResource(rulesFile,
+				this.getClass()), ResourceType.DRL);
 
 		// Configures the Stream mode
 		KnowledgeBaseConfiguration conf = KnowledgeBaseFactory

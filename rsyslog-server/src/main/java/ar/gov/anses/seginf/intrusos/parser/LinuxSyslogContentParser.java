@@ -41,10 +41,8 @@ public class LinuxSyslogContentParser extends SyslogContentParser {
 	public SyslogEvent parser(SyslogRawMessage syslogRawMessage) {
 		
 		SyslogEvent syslogEvent = this.buildSyslogEvent(syslogRawMessage);
-
+		syslogEvent.setSubsystem(this.getLogReporter());
 		syslogEvent.setUser(this.getUser());
-		syslogEvent.sets
-		
 		
 		return null;
 		

@@ -9,16 +9,19 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.FixedReceiveBufferSizePredictorFactory;
 import org.jboss.netty.channel.socket.DatagramChannelFactory;
+import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 public class RSyslogServer {
 
 	public static void main(String[] args) throws Exception {
 		//Solo para UDP
-//		DatagramChannelFactory f = new NioDatagramChannelFactory(Executors.newCachedThreadPool());
+		System.out.println("UDP CONNECTION");
+		DatagramChannelFactory f = new NioDatagramChannelFactory(Executors.newCachedThreadPool());
 		
 		//Solo TCP
-		NioServerSocketChannelFactory f = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+//		System.out.println("TCP CONNECTION");
+//		NioServerSocketChannelFactory f = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
 		

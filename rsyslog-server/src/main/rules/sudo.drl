@@ -14,7 +14,8 @@ when
     $s : SyslogEvent() from entry-point "syslog"
 then
     System.out.println( MessageFormat.format( "[{0,time,full}] @{1}",
-                                              $s.getLogReporter(),
+                                              $s.getSubsystem(),
                                               $s.getUser() ) );
+                                               System.out.println("CORRARELO");
 end
 

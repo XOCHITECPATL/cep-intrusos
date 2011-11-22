@@ -88,5 +88,9 @@ public class SyslogEvent {
 	public void setLogMessage(String logMessage) {
 		this.logMessage = logMessage;
 	}
+	
+	public String toString(){
+		return this.user;
+	}
 
 }

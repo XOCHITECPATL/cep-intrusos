@@ -49,6 +49,8 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 		event.setCreatedAt(new Date());
 		event.setUser(parser.getUser());
 
+		System.out.println(event.toString());
+		
 		this.cepEntryPoint.insert(event);
 
 		System.out.println(syslogRawMessage);
