@@ -25,12 +25,12 @@ public class SyslogEvent {
 		this.createdAt = createdAt;
 	}
 
-	public String getLogReporter() {
+	public String getSubsystem() {
 		return subsystem;
 	}
 
-	public void setLogReporter(String logReporter) {
-		this.subsystem = logReporter;
+	public void setSubsystem(String subsystem) {
+		this.subsystem = subsystem;
 	}
 
 	public String getUser() {
