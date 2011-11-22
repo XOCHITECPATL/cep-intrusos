@@ -41,7 +41,8 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 
 		SyslogRawMessage syslogRawMessage = this.createRawMessage(bytes);
 
-		SyslogContentParser parser = new SyslogMessageRouter().route(syslogRawMessage);
+		SyslogContentParser parser = new SyslogMessageRouter()
+				.route(syslogRawMessage);
 
 		SyslogEvent event = parser.parse(syslogRawMessage);
 

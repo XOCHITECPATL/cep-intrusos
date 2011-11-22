@@ -40,11 +40,18 @@ public class LinuxSyslogContentParser extends SyslogContentParser {
 	}
 
 	public SyslogEvent parse(SyslogRawMessage syslogRawMessage) {
+		try{
 		this.createMap(syslogRawMessage.getLogMessage());
 		SyslogEvent syslogEvent = this.buildSyslogEvent(syslogRawMessage);
 		syslogEvent.setUser(this.getUser());
 
 		return syslogEvent;
+		}catch (Exception e) {
+			System.out.println("Mensaje incorrecto");
+			SyslogEvent event = new SyslogEvent();
+			event.setValid(false);
+			return event;
+		}
 
 	}
 

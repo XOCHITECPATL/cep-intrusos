@@ -17,6 +17,7 @@ public class SyslogEvent {
 	private String subsystem;
 	private String user;
 	private boolean executed = false;
+	private boolean valid = true;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -100,6 +101,14 @@ public class SyslogEvent {
 
 	public void setExecuted(boolean executed) {
 		this.executed = executed;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 
 }

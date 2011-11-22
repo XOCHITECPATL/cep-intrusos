@@ -17,12 +17,11 @@ public class SyslogMessageRouter {
 	
 	public SyslogMessageRouter() {
 		
-		
-		
-		
 	}
 	
 	public SyslogContentParser route(SyslogRawMessage message){
+
+		//Falta determinar particularidades para mensajes de diferentes tipos.
 		return new LinuxSyslogContentParser();
 	}
 	
