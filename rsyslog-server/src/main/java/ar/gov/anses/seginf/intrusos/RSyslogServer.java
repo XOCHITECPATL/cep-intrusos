@@ -15,33 +15,39 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 public class RSyslogServer {
 
 	public static void main(String[] args) throws Exception {
-		//Solo para UDP
+		// Solo para UDP
 		System.out.println("UDP CONNECTION");
-		DatagramChannelFactory f = new NioDatagramChannelFactory(Executors.newCachedThreadPool());
-		
-		//Solo TCP
-//		System.out.println("TCP CONNECTION");
-//		NioServerSocketChannelFactory f = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+		DatagramChannelFactory f = new NioDatagramChannelFactory(
+				Executors.newCachedThreadPool());
+
+		// Solo TCP
+		// System.out.println("TCP CONNECTION");
+		// NioServerSocketChannelFactory f = new
+		// NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+		// Executors.newCachedThreadPool());
 
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
-		
-		//Start cep engine
+
+		// Start cep engine
 		final CEPEngine engine = CEPEngine.getInstance();
 		engine.initEngine();
 
 		// Set up the pipeline factory.
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 			public ChannelPipeline getPipeline() throws Exception {
-				
-				return Channels.pipeline(new RSyslogServerHandler(engine.ep));
+
+				return Channels.pipeline(new RSyslogServerHandler(engine
+						.getWorkingMemoryEntryPoint()));
 			}
 		});
 
-		bootstrap.setOption("receiveBufferSizePredictorFactory",new FixedReceiveBufferSizePredictorFactory(1024));
-		
+		bootstrap.setOption("receiveBufferSizePredictorFactory",
+				new FixedReceiveBufferSizePredictorFactory(1024));
+
 		// Bind and start to accept incoming connections.
 		bootstrap.bind(new InetSocketAddress(1514));
-		
-		System.out.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
+
+		System.out
+				.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
 	}
 }

@@ -1,5 +1,7 @@
 package ar.gov.anses.seginf.intrusos.parser;
 
+import java.util.Date;
+
 import ar.gov.anses.seginf.intrusos.SyslogEvent;
 import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
 
@@ -15,6 +17,7 @@ public abstract class SyslogContentParser {
 		event.setLocalAddress(syslogRawMessage.getLocalAddress());
 		event.setRemoteAddress(syslogRawMessage.getRemoteAddress());
 		event.setSeverity(syslogRawMessage.getSeverity());
+		event.setCreatedAt(new Date());
 
 		return event;
 	}

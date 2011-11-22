@@ -16,6 +16,10 @@ public class SyslogMessageRouter {
 	
 	
 	public SyslogMessageRouter() {
+		
+		
+		
+		
 	}
 	
 	public SyslogContentParser route(SyslogRawMessage message){

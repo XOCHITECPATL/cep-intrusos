@@ -1,11 +1,9 @@
 package ar.gov.anses.seginf.intrusos;
 
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -36,28 +34,36 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-		byte[] bytes = ((ChannelBuffer) e.getMessage()).array();
+	public void messageReceived(ChannelHandlerContext ctx,
+			MessageEvent messageEvent) {
 
-		SyslogRawMessage syslogRawMessage = Rfc3164SyslogConverter
-				.parseMessage(bytes);
+		byte[] bytes = getMessage(messageEvent);
 
-		SyslogContentParser parser = new LinuxSyslogContentParser();
-		
-		//esto va todo junto, es un objeto que recibe el CEP para procesarlo.
-		//hay que envolverlo para poder
+		SyslogRawMessage syslogRawMessage = this.createRawMessage(bytes);
+
+		SyslogContentParser parser = new SyslogMessageRouter().route(syslogRawMessage);
 
 		SyslogEvent event = parser.parse(syslogRawMessage);
-		event.setCreatedAt(new Date());
 
-		System.out.println(event.toString());
-		
 		this.cepEntryPoint.insert(event);
 
-		CEPEngine.getInstance().ksession.fireAllRules();
-		
-		System.out.println(event.wasExecuted());
-		System.out.println("Fin de las reglas : " + syslogRawMessage);
+		CEPEngine.getInstance().getSession().fireAllRules();
+
+	}
+
+	private byte[] getMessage(MessageEvent e) {
+		return ((ChannelBuffer) e.getMessage()).array();
+	}
+
+	/**
+	 * Convierte el conjunto de bytes que viene del syslog a algo entendible por
+	 * humanos
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	private SyslogRawMessage createRawMessage(byte[] bytes) {
+		return Rfc3164SyslogConverter.parseMessage(bytes);
 	}
 
 	@Override

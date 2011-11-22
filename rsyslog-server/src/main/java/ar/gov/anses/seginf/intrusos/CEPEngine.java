@@ -26,8 +26,8 @@ public class CEPEngine {
 		return instance;
 	}
 
-	public WorkingMemoryEntryPoint ep;
-	public StatefulKnowledgeSession ksession;
+	private WorkingMemoryEntryPoint ep;
+	private StatefulKnowledgeSession ksession;
 
 	public void initEngine() {
 		// Creates a knowledge base
@@ -85,6 +85,14 @@ public class CEPEngine {
 		final StatefulKnowledgeSession ksession = kbase
 				.newStatefulKnowledgeSession(ksconf, null);
 		return ksession;
+	}
+
+	public WorkingMemoryEntryPoint getWorkingMemoryEntryPoint(){
+		return this.ep;
+	}
+	
+	public StatefulKnowledgeSession getSession() {
+		return this.ksession;
 	}
 
 }
