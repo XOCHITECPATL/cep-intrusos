@@ -28,7 +28,7 @@ public class SyslogEvent {
 	}
 
 	public String getSubsystem() {
-		return subsystem;
+		return this.returnEmptyIfNull(this.subsystem);
 	}
 
 	public void setSubsystem(String subsystem) {
@@ -36,23 +36,23 @@ public class SyslogEvent {
 	}
 
 	public String getUser() {
-		return user;
+		return this.returnEmptyIfNull(user);
 	}
 
 	public void setUser(String user) {
 		this.user = user;
 	}
 
-	public SyslogFacility getFacility() {
-		return facility;
+	public String getFacility() {
+		return String.valueOf(facility);
 	}
 
 	public void setFacility(SyslogFacility facility) {
 		this.facility = facility;
 	}
 
-	public SyslogSeverity getSeverity() {
-		return severity;
+	public String getSeverity() {
+		return String.valueOf(severity);
 	}
 
 	public void setSeverity(SyslogSeverity severity) {
@@ -60,7 +60,7 @@ public class SyslogEvent {
 	}
 
 	public String getRemoteAddress() {
-		return remoteAddress;
+		return this.returnEmptyIfNull(remoteAddress);
 	}
 
 	public void setRemoteAddress(String remoteAddress) {
@@ -68,7 +68,7 @@ public class SyslogEvent {
 	}
 
 	public String getLocalAddress() {
-		return localAddress;
+		return this.returnEmptyIfNull(localAddress);
 	}
 
 	public void setLocalAddress(String localAddress) {
@@ -76,7 +76,7 @@ public class SyslogEvent {
 	}
 
 	public String getHostname() {
-		return hostname;
+		return this.returnEmptyIfNull(hostname);
 	}
 
 	public void setHostname(String hostname) {
@@ -84,14 +84,14 @@ public class SyslogEvent {
 	}
 
 	public String getLogMessage() {
-		return logMessage;
+		return this.returnEmptyIfNull(logMessage);
 	}
 
 	public void setLogMessage(String logMessage) {
 		this.logMessage = logMessage;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return this.user;
 	}
 
@@ -109,6 +109,10 @@ public class SyslogEvent {
 
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+
+	private String returnEmptyIfNull(String value) {
+		return String.valueOf(value);
 	}
 
 }

@@ -1,5 +1,6 @@
 package ar.gov.anses.seginf.intrusos.parser;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,20 +41,21 @@ public class LinuxSyslogContentParser extends SyslogContentParser {
 	}
 
 	public SyslogEvent parse(SyslogRawMessage syslogRawMessage) {
-		try{
-		this.createMap(syslogRawMessage.getLogMessage());
-		SyslogEvent syslogEvent = this.buildSyslogEvent(syslogRawMessage);
-		syslogEvent.setUser(this.getUser());
+		try {
+			this.createMap(syslogRawMessage.getLogMessage());
+			SyslogEvent syslogEvent = this.buildSyslogEvent(syslogRawMessage);
+			syslogEvent.setUser(this.getUser());
+			syslogEvent.setLogMessage(syslogRawMessage.getLogMessage());
 
-		return syslogEvent;
-		}catch (Exception e) {
+			return syslogEvent;
+		} catch (Exception e) {
 			System.out.println("Mensaje incorrecto");
 			SyslogEvent event = new SyslogEvent();
 			event.setValid(false);
+			event.setCreatedAt(new Date());
 			return event;
 		}
 
 	}
-
 
 }

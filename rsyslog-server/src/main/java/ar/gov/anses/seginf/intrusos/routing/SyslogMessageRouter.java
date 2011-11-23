@@ -1,8 +1,10 @@
 package ar.gov.anses.seginf.intrusos.routing;
 
+import ar.gov.anses.seginf.intrusos.convert.SyslogFacility;
 import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
 import ar.gov.anses.seginf.intrusos.parser.LinuxSyslogContentParser;
 import ar.gov.anses.seginf.intrusos.parser.SyslogContentParser;
+import ar.gov.anses.seginf.intrusos.parser.WindowSyslogContentParser;
 
 /**
  * 
@@ -13,17 +15,17 @@ import ar.gov.anses.seginf.intrusos.parser.SyslogContentParser;
  * 
  */
 public class SyslogMessageRouter {
-	
-	
-	public SyslogMessageRouter() {
-		
-	}
-	
-	public SyslogContentParser route(SyslogRawMessage message){
 
-		//Falta determinar particularidades para mensajes de diferentes tipos.
-		return new LinuxSyslogContentParser();
+	public SyslogMessageRouter() {
+
 	}
-	
+
+	public SyslogContentParser route(SyslogRawMessage message) {
+
+		if (message.getFacility().equals(SyslogFacility.LOCAL3))
+			return new WindowSyslogContentParser();
+		else
+			return new LinuxSyslogContentParser();
+	}
 
 }

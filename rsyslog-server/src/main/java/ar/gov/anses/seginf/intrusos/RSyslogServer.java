@@ -28,18 +28,11 @@ public class RSyslogServer {
 
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
 
-		// Start cep engine
-		final CEPEngine engine = CEPEngine.getInstance();
-		engine.initEngine();
+		// Starts CEP Engine.
+		CEPEngine.getInstance().initEngine();
 
 		// Set up the pipeline factory.
-		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
-			public ChannelPipeline getPipeline() throws Exception {
-
-				return Channels.pipeline(new RSyslogServerHandler(engine
-						.getWorkingMemoryEntryPoint()));
-			}
-		});
+		bootstrap.setPipelineFactory(createChannelPipeline());
 
 		bootstrap.setOption("receiveBufferSizePredictorFactory",
 				new FixedReceiveBufferSizePredictorFactory(1024));
@@ -49,5 +42,16 @@ public class RSyslogServer {
 
 		System.out
 				.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
+	}
+
+	
+	private static ChannelPipelineFactory createChannelPipeline() {
+		return new ChannelPipelineFactory() {
+			public ChannelPipeline getPipeline() throws Exception {
+
+				return Channels.pipeline(new RSyslogServerHandler(CEPEngine
+						.getInstance().getWorkingMemoryEntryPoint()));
+			}
+		};
 	}
 }
