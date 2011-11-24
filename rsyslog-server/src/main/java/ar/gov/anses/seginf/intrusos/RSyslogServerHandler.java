@@ -36,15 +36,19 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	public void messageReceived(ChannelHandlerContext ctx,
 			MessageEvent messageEvent) {
 
+		
+		if(CEPEngine.getInstance().wasModificated()) CEPEngine.getInstance().reloadWorkingMemory();
+		
+		
 		byte[] bytes = getMessage(messageEvent);
 
 		SyslogMessage syslogMessage = this.createMessage(bytes);
 
-		Repository.getInstance().save(syslogMessage);
-		
 		this.cepEntryPoint.insert(syslogMessage);
 
 		CEPEngine.getInstance().getSession().fireAllRules();
+
+		Repository.getInstance().save(syslogMessage);
 
 	}
 

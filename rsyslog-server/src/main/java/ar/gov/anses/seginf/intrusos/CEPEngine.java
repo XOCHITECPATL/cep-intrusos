@@ -1,5 +1,7 @@
 package ar.gov.anses.seginf.intrusos;
 
+import java.io.File;
+
 import org.drools.ClockType;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseConfiguration;
@@ -28,10 +30,17 @@ public class CEPEngine {
 
 	private WorkingMemoryEntryPoint ep;
 	private StatefulKnowledgeSession ksession;
+	private KnowledgeBase kbase;
+	private long lastModified;
+	private String url = "sudo.drl";
+	private String fileURL = "/home/aparedes/workspace/redhat/cep-intrusos/rsyslog-server/src/main/java/ar/gov/anses/seginf/intrusos/sudo.drl";
 
 	public void initEngine() {
 		// Creates a knowledge base
-		final KnowledgeBase kbase = createKnowledgeBase("sudo.drl");
+		this.kbase = createKnowledgeBase(this.url);
+
+		this.setLastModified(new File(this.fileURL).lastModified());
+		System.out.println("TIME LAS MODIFIED: " + this.getLastModified());
 
 		// Creates a knowledge session
 		this.ksession = createKnowledgeSession(kbase);
@@ -87,12 +96,38 @@ public class CEPEngine {
 		return ksession;
 	}
 
-	public WorkingMemoryEntryPoint getWorkingMemoryEntryPoint(){
+	public WorkingMemoryEntryPoint getWorkingMemoryEntryPoint() {
 		return this.ep;
 	}
-	
+
 	public StatefulKnowledgeSession getSession() {
 		return this.ksession;
+	}
+
+	public void reloadWorkingMemory() {
+		this.ksession = this.createKnowledgeSession(this.getBase());
+		this.ep = ksession.getWorkingMemoryEntryPoint("syslog");
+		this.setLastModified(new File(this.fileURL).lastModified());
+		System.out.println("CEP RELOADED");
+	}
+
+	private KnowledgeBase getBase() {
+		return this.kbase;
+	}
+
+	private long getLastModified() {
+		return this.lastModified;
+	}
+
+	private void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	public boolean wasModificated() {
+		System.out.println(" WAS MODIFICATED  :"
+				+ (this.getLastModified() != new File(this.fileURL)
+						.lastModified()));
+		return this.getLastModified() != new File(this.fileURL).lastModified();
 	}
 
 }

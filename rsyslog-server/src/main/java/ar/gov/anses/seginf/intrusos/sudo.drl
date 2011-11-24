@@ -22,6 +22,7 @@ when
     
     ) from entry-point "syslog"
     
+    
      b : SyslogMessage(
     
     	severity.toString matches ".*",
@@ -39,7 +40,7 @@ then
 		$s.getFacility() + " " + 
 		$s.getSeverity() +" "+
 		$s.getLogMessage());
-	new Curl().invoke("http://10.192.54.85/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=ladetuhermana&cod=6754");
+	/*new Curl().invoke("http://10.192.54.85/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=ladetuhermana&cod=6754");*/
     update($s);
 end
 
