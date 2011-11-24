@@ -45,10 +45,10 @@ public final class Rfc3164SyslogConverter {
         StringBuilder sbr = new StringBuilder();
         sbr.append("<");
         if (message.getFacility() == null) {
-            message.setFacility(SyslogFacility.USER);
+            message.setFacility(SyslogFacility.USER.toString());
         }
         if (message.getSeverity() == null) {
-            message.setSeverity(SyslogSeverity.INFO);
+            message.setSeverity(SyslogSeverity.INFO.toString());
         }
         if (message.getHostname() == null) {
             //This is massively ugly..
@@ -58,7 +58,7 @@ public final class Rfc3164SyslogConverter {
                 message.setHostname("UNKNOWN_HOST");
             }
         }
-        sbr.append(message.getFacility().ordinal() * 8 + message.getSeverity().ordinal());
+        sbr.append(SyslogFacility.valueOf(message.getFacility()).ordinal() * 8 + SyslogFacility.valueOf(message.getSeverity()).ordinal());
         sbr.append(">");
         if (message.getTimestamp() == null) {
             message.setTimestamp(new Date());
@@ -135,8 +135,8 @@ public final class Rfc3164SyslogConverter {
                 facility *= 10;
                 facility += Character.digit(priChar, 10);
             }
-            syslogMessage.setFacility(SyslogFacility.values()[facility >> 3]);
-            syslogMessage.setSeverity(SyslogSeverity.values()[facility & 0x07]);
+            syslogMessage.setFacility(SyslogFacility.values()[facility >> 3].toString());
+            syslogMessage.setSeverity(SyslogSeverity.values()[facility & 0x07].toString());
         }
 
         if (priChar != '>') {

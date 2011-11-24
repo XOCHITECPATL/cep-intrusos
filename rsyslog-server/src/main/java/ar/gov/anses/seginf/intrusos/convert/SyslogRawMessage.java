@@ -2,9 +2,16 @@ package ar.gov.anses.seginf.intrusos.convert;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class SyslogRawMessage {
-	private SyslogFacility facility;
-	private SyslogSeverity severity;
+	
+	@Id
+	private long id;
+	private String facility;
+	private String severity;
 	private String remoteAddress;
 	private String localAddress;
 	private String hostname;
@@ -28,11 +35,11 @@ public class SyslogRawMessage {
 		this.localAddress = localAddress;
 	}
 
-	public SyslogFacility getFacility() {
+	public String getFacility() {
 		return facility;
 	}
 
-	public void setFacility(SyslogFacility facility) {
+	public void setFacility(String facility) {
 		this.facility = facility;
 	}
 
@@ -44,11 +51,11 @@ public class SyslogRawMessage {
 		this.timestamp = timestamp;
 	}
 
-	public SyslogSeverity getSeverity() {
+	public String getSeverity() {
 		return severity;
 	}
 
-	public void setSeverity(SyslogSeverity severity) {
+	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
 
@@ -66,6 +73,14 @@ public class SyslogRawMessage {
 
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 //	@Override

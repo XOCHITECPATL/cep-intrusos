@@ -7,8 +7,8 @@ import ar.gov.anses.seginf.intrusos.convert.SyslogSeverity;
 
 public class SyslogEvent {
 
-	private SyslogFacility facility;
-	private SyslogSeverity severity;
+	private String facility;
+	private String severity;
 	private String remoteAddress;
 	private String localAddress;
 	private String hostname;
@@ -47,7 +47,7 @@ public class SyslogEvent {
 		return String.valueOf(facility);
 	}
 
-	public void setFacility(SyslogFacility facility) {
+	public void setFacility(String facility) {
 		this.facility = facility;
 	}
 
@@ -55,7 +55,7 @@ public class SyslogEvent {
 		return String.valueOf(severity);
 	}
 
-	public void setSeverity(SyslogSeverity severity) {
+	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
 
