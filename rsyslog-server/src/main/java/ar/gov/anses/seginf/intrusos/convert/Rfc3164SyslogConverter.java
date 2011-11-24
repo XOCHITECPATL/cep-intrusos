@@ -11,239 +11,264 @@ import java.util.Map;
 
 public final class Rfc3164SyslogConverter {
 
-    private static enum MONTHS {
-        jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
-    }
+	private static enum MONTHS {
+		jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+	}
 
-    private static Map<String, MONTHS> monthValueMap = new HashMap<String, MONTHS>() {
-        /**
+	private static Map<String, MONTHS> monthValueMap = new HashMap<String, MONTHS>() {
+		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-            put("jan", MONTHS.jan);
-            put("feb", MONTHS.feb);
-            put("mar", MONTHS.mar);
-            put("apr", MONTHS.apr);
-            put("may", MONTHS.may);
-            put("jun", MONTHS.jun);
-            put("jul", MONTHS.jul);
-            put("aug", MONTHS.aug);
-            put("sep", MONTHS.sep);
-            put("oct", MONTHS.oct);
-            put("nov", MONTHS.nov);
-            put("dec", MONTHS.dec);
-        }
-    };
+			put("jan", MONTHS.jan);
+			put("feb", MONTHS.feb);
+			put("mar", MONTHS.mar);
+			put("apr", MONTHS.apr);
+			put("may", MONTHS.may);
+			put("jun", MONTHS.jun);
+			put("jul", MONTHS.jul);
+			put("aug", MONTHS.aug);
+			put("sep", MONTHS.sep);
+			put("oct", MONTHS.oct);
+			put("nov", MONTHS.nov);
+			put("dec", MONTHS.dec);
+		}
+	};
 
-    private Rfc3164SyslogConverter() {
-        //Utility class
-    }
+	private Rfc3164SyslogConverter() {
+		// Utility class
+	}
 
-    public static String toString(SyslogMessage message) {
-        StringBuilder sbr = new StringBuilder();
-        sbr.append("<");
-        if (message.getFacility() == null) {
-            message.setFacility(SyslogFacility.USER.toString());
-        }
-        if (message.getSeverity() == null) {
-            message.setSeverity(SyslogSeverity.INFO.toString());
-        }
-        if (message.getHostname() == null) {
-            //This is massively ugly..
-            try {
-                message.setHostname(InetAddress.getLocalHost().toString());
-            } catch (UnknownHostException e) {
-                message.setHostname("UNKNOWN_HOST");
-            }
-        }
-        sbr.append(SyslogFacility.valueOf(message.getFacility()).ordinal() * 8 + SyslogFacility.valueOf(message.getSeverity()).ordinal());
-        sbr.append(">");
-        if (message.getTimestamp() == null) {
-            message.setTimestamp(new Date());
-        }
+	public static String toString(SyslogMessage message) {
+		StringBuilder sbr = new StringBuilder();
+		sbr.append("<");
+		if (message.getFacility() == null) {
+			message.setFacility(SyslogFacility.USER.toString());
+		}
+		if (message.getSeverity() == null) {
+			message.setSeverity(SyslogSeverity.INFO.toString());
+		}
+		if (message.getHostname() == null) {
+			// This is massively ugly..
+			try {
+				message.setHostname(InetAddress.getLocalHost().toString());
+			} catch (UnknownHostException e) {
+				message.setHostname("UNKNOWN_HOST");
+			}
+		}
+		sbr.append(SyslogFacility.valueOf(message.getFacility()).ordinal() * 8
+				+ SyslogFacility.valueOf(message.getSeverity()).ordinal());
+		sbr.append(">");
+		if (message.getTimestamp() == null) {
+			message.setTimestamp(new Date());
+		}
 
-        //SDF isn't going to help much here.
+		// SDF isn't going to help much here.
 
-        Calendar cal = GregorianCalendar.getInstance();
-        cal.setTime(message.getTimestamp());
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(message.getTimestamp());
 
-        String firstLetter = MONTHS.values()[cal.get(Calendar.MONTH)].toString().substring(0, 1);  // Get first letter
-        String remainder = MONTHS.values()[cal.get(Calendar.MONTH)].toString().substring(1);    // Get remainder of word.
-        String capitalized = firstLetter.toUpperCase() + remainder.toLowerCase();
+		String firstLetter = MONTHS.values()[cal.get(Calendar.MONTH)]
+				.toString().substring(0, 1); // Get first letter
+		String remainder = MONTHS.values()[cal.get(Calendar.MONTH)].toString()
+				.substring(1); // Get remainder of word.
+		String capitalized = firstLetter.toUpperCase()
+				+ remainder.toLowerCase();
 
-        sbr.append(capitalized);
-        sbr.append(" ");
+		sbr.append(capitalized);
+		sbr.append(" ");
 
-        if (cal.get(Calendar.DAY_OF_MONTH) < 10) {
-            sbr.append(" ").append(cal.get(Calendar.DAY_OF_MONTH));
-        } else {
-            sbr.append(cal.get(Calendar.DAY_OF_MONTH));
-        }
+		if (cal.get(Calendar.DAY_OF_MONTH) < 10) {
+			sbr.append(" ").append(cal.get(Calendar.DAY_OF_MONTH));
+		} else {
+			sbr.append(cal.get(Calendar.DAY_OF_MONTH));
+		}
 
-        sbr.append(" ");
+		sbr.append(" ");
 
-        if (cal.get(Calendar.HOUR_OF_DAY) < 10) {
-            sbr.append("0").append(cal.get(Calendar.HOUR_OF_DAY));
-        } else {
-            sbr.append(cal.get(Calendar.HOUR_OF_DAY));
-        }
-        sbr.append(":");
+		if (cal.get(Calendar.HOUR_OF_DAY) < 10) {
+			sbr.append("0").append(cal.get(Calendar.HOUR_OF_DAY));
+		} else {
+			sbr.append(cal.get(Calendar.HOUR_OF_DAY));
+		}
+		sbr.append(":");
 
-        if (cal.get(Calendar.MINUTE) < 10) {
-            sbr.append("0").append(cal.get(Calendar.MINUTE));
-        } else {
-            sbr.append(cal.get(Calendar.MINUTE));
-        }
-        sbr.append(":");
+		if (cal.get(Calendar.MINUTE) < 10) {
+			sbr.append("0").append(cal.get(Calendar.MINUTE));
+		} else {
+			sbr.append(cal.get(Calendar.MINUTE));
+		}
+		sbr.append(":");
 
-        if (cal.get(Calendar.SECOND) < 10) {
-            sbr.append("0").append(cal.get(Calendar.SECOND));
-        } else {
-            sbr.append(cal.get(Calendar.SECOND));
-        }
-        sbr.append(" ");
+		if (cal.get(Calendar.SECOND) < 10) {
+			sbr.append("0").append(cal.get(Calendar.SECOND));
+		} else {
+			sbr.append(cal.get(Calendar.SECOND));
+		}
+		sbr.append(" ");
 
-        sbr.append(message.getHostname());
-        sbr.append(" ");
-        sbr.append(message.getLogMessage());
-        return sbr.toString();
-    }
+		sbr.append(message.getHostname());
+		sbr.append(" ");
+		sbr.append(message.getLogMessage());
+		return sbr.toString();
+	}
 
-    public static SyslogMessage toSyslogMessage(String body) {
-        return parseMessage(body.getBytes());
-    }
+	public static SyslogMessage toSyslogMessage(String body) {
+		return parseMessage(body.getBytes());
+	}
 
-    public static SyslogMessage parseMessage(byte[] bytes) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
-        byteBuffer.put(bytes);
-        byteBuffer.rewind();
+	public static SyslogMessage parseMessage(byte[] bytes) {
+		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
+		byteBuffer.put(bytes);
+		byteBuffer.rewind();
 
-        SyslogMessage syslogMessage = new SyslogMessage();
-        Character charFound = (char) byteBuffer.get();
+		SyslogMessage syslogMessage = new SyslogMessage();
+		Character charFound = (char) byteBuffer.get();
 
-        while (charFound != '<') {
-            //Ignore noise in beginning of message.
-            charFound = (char) byteBuffer.get();
-        }
-        char priChar = 0;
-        if (charFound == '<') {
-            int facility = 0;
+		while (charFound != '<') {
+			// Ignore noise in beginning of message.
+			charFound = (char) byteBuffer.get();
+		}
+		char priChar = 0;
+		if (charFound == '<') {
+			int facility = 0;
 
-            while (Character.isDigit(priChar = (char) (byteBuffer.get() & 0xff))) {
-                facility *= 10;
-                facility += Character.digit(priChar, 10);
-            }
-            syslogMessage.setFacility(SyslogFacility.values()[facility >> 3].toString());
-            syslogMessage.setSeverity(SyslogSeverity.values()[facility & 0x07].toString());
-        }
+			while (Character
+					.isDigit(priChar = (char) (byteBuffer.get() & 0xff))) {
+				facility *= 10;
+				facility += Character.digit(priChar, 10);
+			}
+			syslogMessage.setFacility(SyslogFacility.values()[facility >> 3]
+					.toString());
+			syslogMessage.setSeverity(SyslogSeverity.values()[facility & 0x07]
+					.toString());
+		}
 
-        if (priChar != '>') {
-            //Invalid character - this is not a well defined syslog message.
-            System.err.println("Invalid syslog message, missing a > in the Facility/Priority part");
-        }
+		if (priChar != '>') {
+			// Invalid character - this is not a well defined syslog message.
+			System.err
+					.println("Invalid syslog message, missing a > in the Facility/Priority part");
+		}
 
-        //Done parsing severity and facility
-        //<169>Oct 22 10:52:01 TZ-6 scapegoat.dmz.example.org 10.1.2.3 sched[0]: That's All Folks!
-        //Need to parse the date.
+		// Done parsing severity and facility
+		// <169>Oct 22 10:52:01 TZ-6 scapegoat.dmz.example.org 10.1.2.3
+		// sched[0]: That's All Folks!
+		// Need to parse the date.
 
-        /**
-         The TIMESTAMP field is the local time and is in the format of "Mmm dd
-         hh:mm:ss" (without the quote marks) where:
+		/**
+		 * The TIMESTAMP field is the local time and is in the format of "Mmm dd
+		 * hh:mm:ss" (without the quote marks) where:
+		 * 
+		 * Mmm is the English language abbreviation for the month of the year
+		 * with the first character in uppercase and the other two characters in
+		 * lowercase. The following are the only acceptable values:
+		 * 
+		 * Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+		 * 
+		 * dd is the day of the month. If the day of the month is less than 10,
+		 * then it MUST be represented as a space and then the number. For
+		 * example, the 7th day of August would be represented as "Aug  7", with
+		 * two spaces between the "g" and the "7".
+		 * 
+		 * hh:mm:ss is the local time. The hour (hh) is represented in a 24-hour
+		 * format. Valid entries are between 00 and 23, inclusive. The minute
+		 * (mm) and second (ss) entries are between 00 and 59 inclusive.
+		 */
 
-         Mmm is the English language abbreviation for the month of the
-         year with the first character in uppercase and the other two
-         characters in lowercase.  The following are the only acceptable
-         values:
+		char[] month = new char[3];
+		for (int i = 0; i < 3; i++) {
+			month[i] = (char) (byteBuffer.get() & 0xff);
+		}
+		charFound = (char) byteBuffer.get();
+		if (charFound != ' ') {
+			// Invalid Message - missing mandatory space.
+			System.err
+					.println("Invalid syslog message, missing a mandatory space after month");
+		}
+		charFound = (char) (byteBuffer.get() & 0xff);
 
-         Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+		int day = 0;
+		if (charFound == ' ') {
+			// Extra space for the day - this is okay.
+			// Just ignored per the spec.
+		} else {
+			day *= 10;
+			day += Character.digit(charFound, 10);
+		}
 
-         dd is the day of the month.  If the day of the month is less
-         than 10, then it MUST be represented as a space and then the
-         number.  For example, the 7th day of August would be
-         represented as "Aug  7", with two spaces between the "g" and
-         the "7".
+		while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
+			day *= 10;
+			day += Character.digit(charFound, 10);
+		}
 
-         hh:mm:ss is the local time.  The hour (hh) is represented in a
-         24-hour format.  Valid entries are between 00 and 23,
-         inclusive.  The minute (mm) and second (ss) entries are between
-         00 and 59 inclusive.
+		int hour = 0;
+		while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
+			hour *= 10;
+			hour += Character.digit(charFound, 10);
+		}
 
+		int minute = 0;
+		while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
+			minute *= 10;
+			minute += Character.digit(charFound, 10);
+		}
 
-         */
+		int second = 0;
+		while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
+			second *= 10;
+			second += Character.digit(charFound, 10);
+		}
 
-        char[] month = new char[3];
-        for (int i = 0; i < 3; i++) {
-            month[i] = (char) (byteBuffer.get() & 0xff);
-        }
-        charFound = (char) byteBuffer.get();
-        if (charFound != ' ') {
-            //Invalid Message - missing mandatory space.
-            System.err.println("Invalid syslog message, missing a mandatory space after month");
-        }
-        charFound = (char) (byteBuffer.get() & 0xff);
+		// The host is the char sequence until the next ' '
 
-        int day = 0;
-        if (charFound == ' ') {
-            //Extra space for the day - this is okay.
-            //Just ignored per the spec.
-        } else {
-            day *= 10;
-            day += Character.digit(charFound, 10);
-        }
+		StringBuilder host = new StringBuilder();
+		while ((charFound = (char) (byteBuffer.get() & 0xff)) != ' ') {
+			host.append(charFound);
+		}
 
-        while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
-            day *= 10;
-            day += Character.digit(charFound, 10);
-        }
+		syslogMessage.setHostname(host.toString());
 
-        int hour = 0;
-        while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
-            hour *= 10;
-            hour += Character.digit(charFound, 10);
-        }
+		StringBuilder msg = new StringBuilder();
+		while (byteBuffer.hasRemaining()) {
+			charFound = (char) (byteBuffer.get() & 0xff);
+			msg.append(charFound);
+		}
 
-        int minute = 0;
-        while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
-            minute *= 10;
-            minute += Character.digit(charFound, 10);
-        }
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.MONTH,
+				monthValueMap.get(String.valueOf(month).toLowerCase())
+						.ordinal());
+		calendar.set(Calendar.DAY_OF_MONTH, day);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		calendar.set(Calendar.SECOND, second);
 
-        int second = 0;
-        while (Character.isDigit(charFound = (char) (byteBuffer.get() & 0xff))) {
-            second *= 10;
-            second += Character.digit(charFound, 10);
-        }
+		syslogMessage.setTimestamp(calendar.getTime());
 
-        //The host is the char sequence until the next ' '
+		String text = msg.substring(0, msg.length() - 1);
+		syslogMessage.setLogMessage(String.valueOf(text));
+//		System.out.println("Syslog message : {}" + toString(syslogMessage));
 
-        StringBuilder host = new StringBuilder();
-        while ((charFound = (char) (byteBuffer.get() & 0xff)) != ' ') {
-            host.append(charFound);
-        }
+		
+		solveEncodingProblems(syslogMessage);
+		
+		
+		return syslogMessage;
+	}
 
-        syslogMessage.setHostname(host.toString());
-
-        StringBuilder msg = new StringBuilder();
-        while (byteBuffer.hasRemaining()) {
-            charFound = (char) (byteBuffer.get() & 0xff);
-            msg.append(charFound);
-        }
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.MONTH, monthValueMap.get(String.valueOf(month).toLowerCase()).ordinal());
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);
-
-        syslogMessage.setTimestamp(calendar.getTime());
-        
-        String text = msg.substring(0, msg.length()-1);
-        syslogMessage.setLogMessage(String.valueOf(text));
-        //System.out.println("Syslog message : {}"+syslogMessage.toString());
-
-        return syslogMessage;
-    }
+	/**
+	 * PERDOOOOON!!! es una tramoyeta horrible para que pueda persistir!!
+	 * @param syslogMessage
+	 */
+	private static void solveEncodingProblems(SyslogMessage syslogMessage) {
+		syslogMessage.setFacility(String.valueOf(syslogMessage.getFacility()).replace('\0', ' '));
+		syslogMessage.setHostname(String.valueOf(syslogMessage.getHostname()).replace('\0', ' '));
+		syslogMessage.setLocalAddress(String.valueOf(syslogMessage.getLocalAddress()).replace('\0', ' '));
+		syslogMessage.setLogMessage(String.valueOf(syslogMessage.getLogMessage()).replace('\0', ' '));
+		syslogMessage.setRemoteAddress(String.valueOf(syslogMessage.getRemoteAddress()).replace('\0', ' '));
+		syslogMessage.setSeverity(String.valueOf(syslogMessage.getSeverity()).replace('\0', ' '));
+		
+	}
 }
