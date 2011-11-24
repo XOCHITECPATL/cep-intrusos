@@ -1,5 +1,6 @@
 package ar.gov.anses.seginf.intrusos;
 
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +14,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
+import ar.gov.anses.seginf.intrusos.persistence.Repository;
 
 public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	private static final Logger logger = Logger
@@ -36,11 +38,11 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 
 		byte[] bytes = getMessage(messageEvent);
 
-		SyslogMessage syslogRawMessage = this.createRawMessage(bytes);
+		SyslogMessage syslogMessage = this.createMessage(bytes);
 
-//		SyslogEvent event = parser.parse(syslogRawMessage);
-
-		this.cepEntryPoint.insert(syslogRawMessage);
+		Repository.getInstance().save(syslogMessage);
+		
+		this.cepEntryPoint.insert(syslogMessage);
 
 		CEPEngine.getInstance().getSession().fireAllRules();
 
@@ -57,8 +59,11 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	 * @param bytes
 	 * @return
 	 */
-	private SyslogMessage createRawMessage(byte[] bytes) {
-		return Rfc3164SyslogConverter.parseMessage(bytes);
+	private SyslogMessage createMessage(byte[] bytes) {
+		SyslogMessage syslogMessage = Rfc3164SyslogConverter
+				.parseMessage(bytes);
+		syslogMessage.setCreatedAt(new Date());
+		return syslogMessage;
 	}
 
 	@Override
