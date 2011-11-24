@@ -12,10 +12,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
-import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
-import ar.gov.anses.seginf.intrusos.parser.LinuxSyslogContentParser;
-import ar.gov.anses.seginf.intrusos.parser.SyslogContentParser;
-import ar.gov.anses.seginf.intrusos.routing.SyslogMessageRouter;
+import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	private static final Logger logger = Logger
@@ -39,14 +36,11 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 
 		byte[] bytes = getMessage(messageEvent);
 
-		SyslogRawMessage syslogRawMessage = this.createRawMessage(bytes);
+		SyslogMessage syslogRawMessage = this.createRawMessage(bytes);
 
-		SyslogContentParser parser = new SyslogMessageRouter()
-				.route(syslogRawMessage);
+//		SyslogEvent event = parser.parse(syslogRawMessage);
 
-		SyslogEvent event = parser.parse(syslogRawMessage);
-
-		this.cepEntryPoint.insert(event);
+		this.cepEntryPoint.insert(syslogRawMessage);
 
 		CEPEngine.getInstance().getSession().fireAllRules();
 
@@ -63,7 +57,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	 * @param bytes
 	 * @return
 	 */
-	private SyslogRawMessage createRawMessage(byte[] bytes) {
+	private SyslogMessage createRawMessage(byte[] bytes) {
 		return Rfc3164SyslogConverter.parseMessage(bytes);
 	}
 

@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import ar.gov.anses.seginf.intrusos.convert.SyslogRawMessage;
+import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 /**
  * Objeto encargado de realizar las funcionalidades basicas para loggear los
@@ -44,7 +44,7 @@ public class Repository {
 	private void setUp() {
 		Configuration configuration = new Configuration().configure();
 
-		configuration.addAnnotatedClass(SyslogRawMessage.class);
+		configuration.addAnnotatedClass(SyslogMessage.class);
 
 		this.sessionFactory = configuration.buildSessionFactory();
 	}

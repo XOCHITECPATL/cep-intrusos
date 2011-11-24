@@ -2,9 +2,6 @@ package ar.gov.anses.seginf.intrusos;
 
 import java.util.Date;
 
-import ar.gov.anses.seginf.intrusos.convert.SyslogFacility;
-import ar.gov.anses.seginf.intrusos.convert.SyslogSeverity;
-
 public class SyslogEvent {
 
 	private String facility;

@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class SyslogRawMessage {
+public class SyslogMessage {
 	
 	@Id
 	private long id;
@@ -16,8 +16,12 @@ public class SyslogRawMessage {
 	private String localAddress;
 	private String hostname;
 	private String logMessage;
-
 	private Date timestamp;
+	private Date createdAt;
+	
+
+	private boolean executed = false;
+	private boolean valid = true;
 
 	public String getLogMessage() {
 		return logMessage;
@@ -82,13 +86,37 @@ public class SyslogRawMessage {
 	public void setId(long id) {
 		this.id = id;
 	}
+	
+	public Date getCreatedAt() {
+		return createdAt;
+	}
 
-//	@Override
-//	public String toString() {
-//		return "SyslogMessage{<facility>" + facility.toString()+"</facility>" 
-//				+ ", severity=" + severity + ", remoteAddress='"
-//				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'" + ", hostname='" + hostname + "'" + ", messageTime=" + timestamp
-//				+ "<content>"+this.logMessage.trim()+"</content>"  
-//				+ '}';
-//	}
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public boolean isExecuted() {
+		return executed;
+	}
+
+	public void setExecuted(boolean executed) {
+		this.executed = executed;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
+	@Override
+	public String toString() {
+		return "SyslogMessage{<facility>" + facility.toString()+"</facility>" 
+				+ ", severity=" + severity + ", remoteAddress='"
+				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'" + ", hostname='" + hostname + "'" + ", messageTime=" + timestamp
+				+ "<content>"+this.logMessage.trim()+"</content>"  
+				+ '}';
+	}
 }
