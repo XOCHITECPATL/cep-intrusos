@@ -29,7 +29,7 @@ public class RSyslogServer {
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
 
 		// Starts CEP Engine.
-		CEPEngine.getInstance().initEngine();
+//		CEPEngine.getInstance().initEngine();
 
 		// Set up the pipeline factory.
 		bootstrap.setPipelineFactory(createChannelPipeline());
@@ -37,7 +37,7 @@ public class RSyslogServer {
 		bootstrap.setOption("receiveBufferSizePredictorFactory",
 				new FixedReceiveBufferSizePredictorFactory(1024));
 
-		// Bind and start to accept incoming connections.
+		// Bind and start to accept incoming conn<ections.
 		bootstrap.bind(new InetSocketAddress(1514));
 
 		System.out
@@ -49,8 +49,7 @@ public class RSyslogServer {
 		return new ChannelPipelineFactory() {
 			public ChannelPipeline getPipeline() throws Exception {
 
-				return Channels.pipeline(new RSyslogServerHandler(CEPEngine
-						.getInstance().getWorkingMemoryEntryPoint()));
+				return Channels.pipeline(new RSyslogServerHandler());
 			}
 		};
 	}

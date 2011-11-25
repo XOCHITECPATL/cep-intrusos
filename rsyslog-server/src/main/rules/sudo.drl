@@ -1,21 +1,73 @@
 package org.drools.examples.twittercbr
 
-import ar.gov.anses.seginf.intrusos.parser.SyslogContentParser
+import ar.gov.anses.seginf.intrusos.convert.*
+import ar.gov.anses.seginf.intrusos.notification.*
 import java.text.MessageFormat
 
-declare SyslogEvent
+declare SyslogMessage
     @role( event )
     @timestamp( createdAt )
-    @expires( 2s )
+    @expires( 10s )
 end
 
 rule "Dump messages"
+no-loop true
 when
-    $s  SyslogEvent() from entry-point "syslog"
+    $s : SyslogMessage(
+    
+    	severity.toString matches ".*",
+    	facility.toString matches ".*",
+    	hostname.toString matches ".*",
+    	logMessage.toString matches ".*sudo.*"
+    
+    ) from entry-point "syslog"
+    
+    
+     b : SyslogMessage(
+    
+    	severity.toString matches ".*",
+    	facility.toString matches ".*",
+    	hostname.toString matches ".*",
+    	logMessage.toString matches ".*sudo.*",
+    	this after [1ms,10s] $s
+    
+    ) from entry-point "syslog"
+    
 then
-    System.out.println( MessageFormat.format( "[{0,time,full}] @{1}",
-                                              $s.getSubsystem(),
-                                              $s.getUser() ) );
-                                               System.out.println("CORRARELO1");
+	System.out.println("ahora adohsahdkjsa!");
+	$s.setExecuted(true);
+	System.out.println(
+		$s.getFacility() + " " + 
+		$s.getSeverity() +" "+
+		$s.getLogMessage());
+	/*new Curl().invoke("http://10.192.54.85/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=ladetuhermana&cod=6754");*/
+    update($s);
 end
 
+rule "Segunda regla"
+no-loop true
+when
+    $s : SyslogMessage(
+    
+    	severity.toString matches ".*",
+    	facility.toString matches ".*",
+    	hostname.toString matches ".*",
+    	logMessage.toString matches ".*xp.*"
+    
+    ) from entry-point "syslog"
+    
+     b : SyslogMessage(
+    
+    	severity.toString matches ".*",
+    	facility.toString matches ".*",
+    	hostname.toString matches ".*",
+    	logMessage.toString matches ".*xp.*",
+    	this after [1ms,10s] $s
+    
+    ) from entry-point "syslog"
+    
+then
+	System.out.println("manda un mensaje loco!!");
+	$s.setExecuted(true);
+    update($s);
+end

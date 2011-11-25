@@ -22,10 +22,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 
 	private final AtomicLong transferredBytes = new AtomicLong();
 
-	private WorkingMemoryEntryPoint cepEntryPoint;
-
-	public RSyslogServerHandler(WorkingMemoryEntryPoint ep) {
-		this.cepEntryPoint = ep;
+	public RSyslogServerHandler() {
 	}
 
 	public long getTransferredBytes() {
@@ -37,16 +34,13 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 			MessageEvent messageEvent) {
 
 		
-		if(CEPEngine.getInstance().wasModificated()) CEPEngine.getInstance().reloadWorkingMemory();
-		
-		
 		byte[] bytes = getMessage(messageEvent);
 
 		SyslogMessage syslogMessage = this.createMessage(bytes);
 
-		this.cepEntryPoint.insert(syslogMessage);
+		CEPEngine.getInstance().getWorkingMemoryEntryPoint().insert(syslogMessage);
 
-		CEPEngine.getInstance().getSession().fireAllRules();
+		CEPEngine.getInstance().fireAllRules();
 
 		Repository.getInstance().save(syslogMessage);
 
