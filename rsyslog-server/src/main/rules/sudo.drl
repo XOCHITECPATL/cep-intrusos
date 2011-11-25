@@ -10,6 +10,20 @@ declare SyslogMessage
     @expires( 10s )
 end
 
+
+rule "just logging"
+no-loop true
+when
+    $s : SyslogMessage( ) from entry-point "syslog"
+    
+then
+	System.out.println($s.toString());
+	$s.setExecuted(true);
+    update($s);
+end
+
+
+
 rule "Dump messages"
 no-loop true
 when
@@ -68,6 +82,27 @@ when
     
 then
 	System.out.println("manda un mensaje loco!!");
+	$s.setExecuted(true);
+    update($s);
+end
+
+
+
+rule "SSH"
+no-loop true
+when
+    $s : SyslogMessage(
+    
+    	severity.toString matches ".*CRITICAL.*",
+    	facility.toString matches ".*",
+    	hostname.toString matches ".*",
+    	logMessage.toString matches ".*kernel.*ssh.*"
+    
+    ) from entry-point "syslog"
+    
+then
+	System.out.println("ssh");
+	new Curl().invoke("http://192.168.90.1/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=ladetuhermana&cod=6754");
 	$s.setExecuted(true);
     update($s);
 end
