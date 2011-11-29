@@ -27,7 +27,7 @@ public class CEPEngine {
 
 	private static CEPEngine instance;
 	private String entryPointName;
-	private String url = "file:///home/aparedes/workspace/redhat/cep-intrusos/rsyslog-server/src/main/java/ar/gov/anses/seginf/intrusos/change-set.xml";
+	private String url = "ar/gov/anses/seginf/intrusos/change-set.xml";
 	private KnowledgeAgent kagent;
 	private KnowledgeBase base;
 	private StatefulKnowledgeSession session;
@@ -48,8 +48,8 @@ public class CEPEngine {
 		KnowledgeAgent kagent = KnowledgeAgentFactory
 				.newKnowledgeAgent("MyAgent");
 		Logger.debug("KnowledgeAgent started", this.getClass());
-
-		kagent.applyChangeSet(ResourceFactory.newUrlResource(rulesFile));
+		kagent.applyChangeSet(ResourceFactory.newClassPathResource(rulesFile,
+				getClass()));
 		Logger.debug("ChangeSet applied", this.getClass());
 
 		ResourceFactory.getResourceChangeNotifierService().start();
