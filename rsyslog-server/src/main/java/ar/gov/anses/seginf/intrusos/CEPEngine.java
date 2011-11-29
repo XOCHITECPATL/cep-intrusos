@@ -1,19 +1,10 @@
 package ar.gov.anses.seginf.intrusos;
 
-import org.drools.ChangeSet;
 import org.drools.ClockType;
 import org.drools.KnowledgeBase;
-import org.drools.KnowledgeBaseConfiguration;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.agent.KnowledgeAgent;
 import org.drools.agent.KnowledgeAgentFactory;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderError;
-import org.drools.builder.KnowledgeBuilderErrors;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.conf.EventProcessingOption;
-import org.drools.definition.KnowledgePackage;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.KnowledgeSessionConfiguration;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -24,58 +15,35 @@ import ar.gov.anses.seginf.intrusos.log.Logger;
 
 public class CEPEngine {
 
-	private static CEPEngine instance;
-
 	public static CEPEngine getInstance() {
 		if (instance == null)
 			instance = new CEPEngine();
 		return instance;
 	}
 
-	private WorkingMemoryEntryPoint ep;
-	private StatefulKnowledgeSession ksession;
-	private KnowledgeBase kbase;
+	// ****************************************************************
+	// ***************************** Object ***************************
+	// ****************************************************************
+
+	private static CEPEngine instance;
+	private String entryPointName;
 	private String url = "file:///home/aparedes/workspace/redhat/cep-intrusos/rsyslog-server/src/main/java/ar/gov/anses/seginf/intrusos/change-set.xml";
 	private KnowledgeAgent kagent;
 	private KnowledgeBase base;
 	private StatefulKnowledgeSession session;
 
 	public CEPEngine() {
-
+		this.setEntryPointName("syslog");
 		this.kagent = this.createAgent(this.url);
 	}
 
-	// public void initEngine() {
-	//
-	//
-	// // Creates a knowledge base
-	// // this.kbase = kagent.getKnowledgeBase();
-	// this.kbase = this.createKnowledgeBase(this.url);
-	// Logger.debug("KnowledgeBase created >> " + this.kbase, this.getClass());
-	//
-	// for (KnowledgePackage kp : this.kbase.getKnowledgePackages()) {
-	// Logger.debug(String.valueOf(kp.getRules().size()), this.getClass());
-	// }
-	//
-	// // Creates a knowledge session
-	// this.ksession = createKnowledgeSession(kbase);
-	// Logger.debug("KnowledgeSession started >> " + this.ksession,
-	// this.getClass());
-	//
-	// // Gets the stream entry point
-	// this.ep = ksession.getWorkingMemoryEntryPoint("syslog");
-	// Logger.debug("WorkingMemoryEntryPoint setted >> " + this.ep,
-	// this.getClass());
-	//
-	// ResourceFactory.getResourceChangeNotifierService().start();
-	//
-	// ResourceFactory.getResourceChangeScannerService().start();
-	//
-	// System.out.println("CEP Levantado");
-	// // Starts to fire rules in Drools Fusion
-	// // ksession.fireUntilHalt();
-	// }
-
+	/**
+	 * Crea el agente que se va a encargar de monitorear si hay cambios en el
+	 * archivo de reglas cada 60 segundos.
+	 * 
+	 * @param rulesFile
+	 * @return
+	 */
 	private KnowledgeAgent createAgent(String rulesFile) {
 		KnowledgeAgent kagent = KnowledgeAgentFactory
 				.newKnowledgeAgent("MyAgent");
@@ -88,44 +56,6 @@ public class CEPEngine {
 		ResourceFactory.getResourceChangeScannerService().start();
 
 		return kagent;
-	}
-
-	/**
-	 * Creates a Drools KnowledgeBase and adds the given rules file into it
-	 */
-	private KnowledgeBase createKnowledgeBase(String rulesFile) {
-
-		KnowledgeAgent kagent = KnowledgeAgentFactory
-				.newKnowledgeAgent("MyAgent");
-		Logger.debug("KnowledgeAgent started", this.getClass());
-
-		kagent.applyChangeSet(ResourceFactory.newUrlResource(rulesFile));
-		Logger.debug("ChangeSet applied", this.getClass());
-
-		// Parses and compiles the rules file
-		// KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
-		// .newKnowledgeBuilder();
-		// kbuilder.add(ResourceFactory.newUrlResource(rulesFile),
-		// ResourceType.CHANGE_SET);
-
-		// Verificacion de errores
-		// KnowledgeBuilderErrors errors = kbuilder.getErrors();
-		// if (errors.size() > 0) {
-		// for (KnowledgeBuilderError error : errors) {
-		// System.err.println(error);
-		// }
-		// throw new IllegalArgumentException("Could not parse knowledge.");
-		// }
-
-		// Configures the Stream mode
-		// KnowledgeBaseConfiguration conf = KnowledgeBaseFactory
-		// .newKnowledgeBaseConfiguration();
-		// conf.setOption(EventProcessingOption.STREAM);
-
-		// Creates the knowledge base and adds the rules
-		// kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
-		// return kbase;
-		return kagent.getKnowledgeBase();
 	}
 
 	/**
@@ -149,7 +79,7 @@ public class CEPEngine {
 	public WorkingMemoryEntryPoint getWorkingMemoryEntryPoint() {
 		KnowledgeBase base = this.getBase(this.getAgent());
 		StatefulKnowledgeSession session = this.getSession(base);
-		return session.getWorkingMemoryEntryPoint("syslog");
+		return session.getWorkingMemoryEntryPoint(this.getEntryPointName());
 	}
 
 	private KnowledgeBase getBase(KnowledgeAgent agent) {
@@ -160,6 +90,13 @@ public class CEPEngine {
 		return this.kagent;
 	}
 
+	/**
+	 * Devuelve la session existente si el archivo de reglas no fue modificado.
+	 * Sino recarga el archivo y crea una nueva sesion.
+	 * 
+	 * @param base
+	 * @return
+	 */
 	public StatefulKnowledgeSession getSession(KnowledgeBase base) {
 		if (this.base == null || (base.hashCode() != this.base.hashCode())) {
 			this.base = base;
@@ -169,13 +106,16 @@ public class CEPEngine {
 			return this.session;
 	}
 
-	public void reloadWorkingMemory() {
-
-		System.out.println("CEP RELOADED");
-	}
-
 	public void fireAllRules() {
 		this.getSession(this.base).fireAllRules();
+	}
+
+	public String getEntryPointName() {
+		return entryPointName;
+	}
+
+	public void setEntryPointName(String entryPoint) {
+		this.entryPointName = entryPoint;
 	}
 
 }
