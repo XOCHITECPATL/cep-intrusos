@@ -11,7 +11,9 @@ public class NotificationTest {
 		
 		Curl curl = new Curl();
 		
-		curl.invoke("http://10.192.54.85/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=ladetuhermana&cod=6754");
+			
+
+		curl.invoke("http://192.168.90.1/anses/notify.php?via=sms&action=new&dst=005491160172120&msg=sgtpepper&cod=8669");
 		
 	}
 	
