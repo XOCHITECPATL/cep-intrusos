@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
+import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -15,21 +16,9 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 public class RSyslogServer {
 
 	public static void main(String[] args) throws Exception {
-		// Solo para UDP
-		System.out.println("UDP CONNECTION");
-		DatagramChannelFactory f = new NioDatagramChannelFactory(
-				Executors.newCachedThreadPool());
 
-		// Solo TCP
-		// System.out.println("TCP CONNECTION");
-		// NioServerSocketChannelFactory f = new
-		// NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-		// Executors.newCachedThreadPool());
-
-		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(f);
-
-		// Starts CEP Engine.
-//		CEPEngine.getInstance().initEngine();
+		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(
+				ChannelFactoryFactory.createUDPChannelFactory());
 
 		// Set up the pipeline factory.
 		bootstrap.setPipelineFactory(createChannelPipeline());
@@ -44,7 +33,6 @@ public class RSyslogServer {
 				.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
 	}
 
-	
 	private static ChannelPipelineFactory createChannelPipeline() {
 		return new ChannelPipelineFactory() {
 			public ChannelPipeline getPipeline() throws Exception {

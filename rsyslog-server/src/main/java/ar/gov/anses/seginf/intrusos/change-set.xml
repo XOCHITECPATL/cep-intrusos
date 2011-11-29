@@ -2,7 +2,7 @@
 	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance' xs:schemaLocation='http://drools.org/drools-5.0/change-set change-set-5.0.xsd'>
 	<add>
 		<resource
-			source='file:///home/aparedes/workspace/redhat/cep-intrusos/rsyslog-server/src/main/rules/sudo.drl'
+			source='file:///opt/rules/rules.drl'
 			type='DRL' />
 	</add>
 </change-set>
