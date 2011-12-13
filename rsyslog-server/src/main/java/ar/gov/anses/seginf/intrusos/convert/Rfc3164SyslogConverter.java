@@ -9,17 +9,17 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Rfc3164SyslogConverter {
+public final class Rfc3164SyslogConverter implements Connector {
 
-	private static enum MONTHS {
+	private   enum MONTHS {
 		jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
 	}
 
-	private static Map<String, MONTHS> monthValueMap = new HashMap<String, MONTHS>() {
+	private   Map<String, MONTHS> monthValueMap = new HashMap<String, MONTHS>() {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 1L;
+		private   final long serialVersionUID = 1L;
 
 		{
 			put("jan", MONTHS.jan);
@@ -37,11 +37,11 @@ public final class Rfc3164SyslogConverter {
 		}
 	};
 
-	private Rfc3164SyslogConverter() {
+	public Rfc3164SyslogConverter() {
 		// Utility class
 	}
 
-	public static String toString(SyslogMessage message) {
+	public String toString(SyslogMessage message) {
 		StringBuilder sbr = new StringBuilder();
 		sbr.append("<");
 		if (message.getFacility() == null) {
@@ -115,11 +115,11 @@ public final class Rfc3164SyslogConverter {
 		return sbr.toString();
 	}
 
-	public static SyslogMessage toSyslogMessage(String body) {
+	public   SyslogMessage toSyslogMessage(String body) {
 		return parseMessage(body.getBytes());
 	}
 
-	public static SyslogMessage parseMessage(byte[] bytes) {
+	public   SyslogMessage parseMessage(byte[] bytes) {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
 		byteBuffer.put(bytes);
 		byteBuffer.rewind();
@@ -262,7 +262,7 @@ public final class Rfc3164SyslogConverter {
 	 * PERDOOOOON!!! es una tramoyeta horrible para que pueda persistir!!
 	 * @param syslogMessage
 	 */
-	private static void solveEncodingProblems(SyslogMessage syslogMessage) {
+	private void solveEncodingProblems(SyslogMessage syslogMessage) {
 		syslogMessage.setFacility(String.valueOf(syslogMessage.getFacility()).replace('\0', ' '));
 		syslogMessage.setHostname(String.valueOf(syslogMessage.getHostname()).replace('\0', ' '));
 		syslogMessage.setLocalAddress(String.valueOf(syslogMessage.getLocalAddress()).replace('\0', ' '));

@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -14,7 +13,6 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
-import ar.gov.anses.seginf.intrusos.persistence.Repository;
 
 public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	private static final Logger logger = Logger
@@ -37,12 +35,14 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 		byte[] bytes = getMessage(messageEvent);
 
 		SyslogMessage syslogMessage = this.createMessage(bytes);
+		
+		syslogMessage.setLogMessage(syslogMessage.getLogMessage().trim());
 
 		CEPEngine.getInstance().getWorkingMemoryEntryPoint().insert(syslogMessage);
 
 		CEPEngine.getInstance().fireAllRules();
 
-		Repository.getInstance().save(syslogMessage);
+//		Repository.getInstance().save(syslogMessage);
 
 	}
 
@@ -58,7 +58,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	 * @return
 	 */
 	private SyslogMessage createMessage(byte[] bytes) {
-		SyslogMessage syslogMessage = Rfc3164SyslogConverter
+		SyslogMessage syslogMessage = new Rfc3164SyslogConverter()
 				.parseMessage(bytes);
 		syslogMessage.setCreatedAt(new Date());
 		return syslogMessage;
