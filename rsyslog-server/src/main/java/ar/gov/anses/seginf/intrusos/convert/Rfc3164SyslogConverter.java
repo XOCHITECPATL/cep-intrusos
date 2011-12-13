@@ -9,6 +9,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.gov.anses.seginf.intrusos.connector.Connector;
+
 public final class Rfc3164SyslogConverter implements Connector {
 
 	private   enum MONTHS {
@@ -113,10 +115,6 @@ public final class Rfc3164SyslogConverter implements Connector {
 		sbr.append(" ");
 		sbr.append(message.getLogMessage());
 		return sbr.toString();
-	}
-
-	public   SyslogMessage toSyslogMessage(String body) {
-		return parseMessage(body.getBytes());
 	}
 
 	public   SyslogMessage parseMessage(byte[] bytes) {
@@ -262,7 +260,7 @@ public final class Rfc3164SyslogConverter implements Connector {
 	 * PERDOOOOON!!! es una tramoyeta horrible para que pueda persistir!!
 	 * @param syslogMessage
 	 */
-	private void solveEncodingProblems(SyslogMessage syslogMessage) {
+	private void solveEncodingProblems(StandardMessage syslogMessage) {
 		syslogMessage.setFacility(String.valueOf(syslogMessage.getFacility()).replace('\0', ' '));
 		syslogMessage.setHostname(String.valueOf(syslogMessage.getHostname()).replace('\0', ' '));
 		syslogMessage.setLocalAddress(String.valueOf(syslogMessage.getLocalAddress()).replace('\0', ' '));
@@ -270,5 +268,9 @@ public final class Rfc3164SyslogConverter implements Connector {
 		syslogMessage.setRemoteAddress(String.valueOf(syslogMessage.getRemoteAddress()).replace('\0', ' '));
 		syslogMessage.setSeverity(String.valueOf(syslogMessage.getSeverity()).replace('\0', ' '));
 		
+	}
+
+	public StandardMessage parseMessageIfMine(byte[] bytes) {
+		return this.parseMessage(bytes);
 	}
 }

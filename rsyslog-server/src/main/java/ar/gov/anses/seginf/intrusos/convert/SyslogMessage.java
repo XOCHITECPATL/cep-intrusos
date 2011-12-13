@@ -8,10 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class SyslogMessage {
-	
+public class SyslogMessage implements StandardMessage {
+
 	@Id
-	@GeneratedValue ( strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String facility;
 	private String severity;
@@ -21,7 +21,6 @@ public class SyslogMessage {
 	private String logMessage;
 	private Date timestamp;
 	private Date createdAt;
-	
 
 	private boolean executed = false;
 	private boolean valid = true;
@@ -89,7 +88,7 @@ public class SyslogMessage {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -116,10 +115,11 @@ public class SyslogMessage {
 
 	@Override
 	public String toString() {
-		return "SyslogMessage{<facility>" + facility.toString()+"</facility>" 
+		return "SyslogMessage{<facility>" + facility.toString() + "</facility>"
 				+ ", severity=" + severity + ", remoteAddress='"
-				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'" + ", hostname='" + hostname + "'" + ", messageTime=" + timestamp
-				+ "<content>"+this.logMessage.trim()+"</content>"  
-				+ '}';
+				+ remoteAddress + "'" + ", localAddress='" + localAddress + "'"
+				+ ", hostname='" + hostname + "'" + ", messageTime="
+				+ timestamp + "<content>" + this.logMessage.trim()
+				+ "</content>" + '}';
 	}
 }

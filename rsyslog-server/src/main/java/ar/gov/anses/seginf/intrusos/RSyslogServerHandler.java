@@ -12,6 +12,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
+import ar.gov.anses.seginf.intrusos.convert.StandardMessage;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
@@ -34,7 +35,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 		
 		byte[] bytes = getMessage(messageEvent);
 
-		SyslogMessage syslogMessage = this.createMessage(bytes);
+		StandardMessage syslogMessage = this.createMessage(bytes);
 		
 		syslogMessage.setLogMessage(syslogMessage.getLogMessage().trim());
 
@@ -57,7 +58,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	 * @param bytes
 	 * @return
 	 */
-	private SyslogMessage createMessage(byte[] bytes) {
+	private StandardMessage createMessage(byte[] bytes) {
 		SyslogMessage syslogMessage = new Rfc3164SyslogConverter()
 				.parseMessage(bytes);
 		syslogMessage.setCreatedAt(new Date());
