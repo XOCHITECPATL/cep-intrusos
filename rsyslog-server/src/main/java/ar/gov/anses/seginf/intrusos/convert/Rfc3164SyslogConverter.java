@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.gov.anses.seginf.intrusos.connector.Connector;
+import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
 
 public final class Rfc3164SyslogConverter implements Connector {
 

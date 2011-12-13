@@ -1,6 +1,5 @@
 package ar.gov.anses.seginf.intrusos.connector;
 
-import ar.gov.anses.seginf.intrusos.convert.StandardMessage;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 public interface Connector {

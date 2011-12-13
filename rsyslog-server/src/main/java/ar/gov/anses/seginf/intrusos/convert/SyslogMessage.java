@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
+
 @Entity
 public class SyslogMessage implements StandardMessage {
 

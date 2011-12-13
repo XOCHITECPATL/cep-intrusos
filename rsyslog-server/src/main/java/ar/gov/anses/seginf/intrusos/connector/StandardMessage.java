@@ -1,4 +1,4 @@
-package ar.gov.anses.seginf.intrusos.convert;
+package ar.gov.anses.seginf.intrusos.connector;
 
 import java.util.Date;
 

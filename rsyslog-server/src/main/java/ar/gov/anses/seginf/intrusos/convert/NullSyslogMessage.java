@@ -2,6 +2,8 @@ package ar.gov.anses.seginf.intrusos.convert;
 
 import java.util.Date;
 
+import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
+
 public class NullSyslogMessage implements StandardMessage {
 
 	public void setValid(boolean valid) {

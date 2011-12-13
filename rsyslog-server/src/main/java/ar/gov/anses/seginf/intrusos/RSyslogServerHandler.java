@@ -11,8 +11,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
-import ar.gov.anses.seginf.intrusos.convert.StandardMessage;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
