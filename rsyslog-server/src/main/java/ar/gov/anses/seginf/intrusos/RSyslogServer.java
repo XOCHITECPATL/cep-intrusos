@@ -1,6 +1,9 @@
 package ar.gov.anses.seginf.intrusos;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Properties;
 
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.channel.ChannelPipeline;
@@ -11,6 +14,8 @@ import org.jboss.netty.channel.FixedReceiveBufferSizePredictorFactory;
 public class RSyslogServer {
 
 	public static void main(String[] args) throws Exception {
+
+		loadProperties();
 
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(
 				ChannelFactoryFactory.createUDPChannelFactory());
@@ -26,6 +31,19 @@ public class RSyslogServer {
 
 		System.out
 				.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
+	}
+
+	private static void loadProperties() {
+
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream("src/main/resources/config.properties"));
+			System.out.println("Configuration Loaded");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Configuration could not be loaded");
+		}
+
 	}
 
 	private static ChannelPipelineFactory createChannelPipeline() {
