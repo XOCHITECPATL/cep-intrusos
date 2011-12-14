@@ -15,8 +15,6 @@ public class RSyslogServer {
 
 	public static void main(String[] args) throws Exception {
 
-		loadProperties();
-
 		ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(
 				ChannelFactoryFactory.createUDPChannelFactory());
 
@@ -31,19 +29,6 @@ public class RSyslogServer {
 
 		System.out
 				.println("Escuchando conexiones UDP en el puerto 1514, dale petitt!");
-	}
-
-	private static void loadProperties() {
-
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream("src/main/resources/config.properties"));
-			System.out.println("Configuration Loaded");
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Configuration could not be loaded");
-		}
-
 	}
 
 	private static ChannelPipelineFactory createChannelPipeline() {

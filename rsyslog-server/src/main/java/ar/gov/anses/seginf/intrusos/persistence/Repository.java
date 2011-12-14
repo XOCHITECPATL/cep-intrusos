@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import ar.gov.anses.seginf.intrusos.SystemProperties;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 /**
@@ -42,6 +43,9 @@ public class Repository {
 	}
 
 	private void setUp() {
+
+		if (!SystemProperties.getInstance().getValue("repository"))
+			return;
 		Configuration configuration = new Configuration().configure();
 
 		configuration.addAnnotatedClass(SyslogMessage.class);
@@ -50,6 +54,10 @@ public class Repository {
 	}
 
 	public void save(Object storable) {
+
+		if (!SystemProperties.getInstance().getValue("repository"))
+			return;
+
 		try {
 			Session session = sessionFactory.openSession();
 			Transaction tx = session.beginTransaction();
