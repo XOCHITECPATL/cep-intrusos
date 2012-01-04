@@ -11,7 +11,6 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
 import ar.gov.anses.seginf.intrusos.convert.Rfc3164SyslogConverter;
 import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 import ar.gov.anses.seginf.intrusos.persistence.Repository;
@@ -35,7 +34,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 
 		byte[] bytes = getMessage(messageEvent);
 
-		StandardMessage syslogMessage = this.createMessage(bytes);
+		SyslogMessage syslogMessage = this.createMessage(bytes);
 
 		syslogMessage.setLogMessage(syslogMessage.getLogMessage().trim());
 
@@ -45,6 +44,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 		CEPEngine.getInstance().fireAllRules();
 
 		Repository.getInstance().save(syslogMessage);
+//		System.out.println(syslogMessage.toString());
 
 	}
 
@@ -59,7 +59,7 @@ public class RSyslogServerHandler extends SimpleChannelUpstreamHandler {
 	 * @param bytes
 	 * @return
 	 */
-	private StandardMessage createMessage(byte[] bytes) {
+	private SyslogMessage createMessage(byte[] bytes) {
 		SyslogMessage syslogMessage = new Rfc3164SyslogConverter()
 				.parseMessage(bytes);
 		syslogMessage.setCreatedAt(new Date());

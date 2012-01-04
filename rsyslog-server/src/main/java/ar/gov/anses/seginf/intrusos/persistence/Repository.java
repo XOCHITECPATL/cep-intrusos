@@ -1,5 +1,6 @@
 package ar.gov.anses.seginf.intrusos.persistence;
 
+import java.io.File;
 import java.sql.SQLException;
 
 import org.hibernate.HibernateException;
@@ -44,10 +45,9 @@ public class Repository {
 
 	private void setUp() {
 
-		if (!SystemProperties.getInstance().getValue("repository"))
-			return;
-		Configuration configuration = new Configuration().configure();
-
+//		if (!SystemProperties.getInstance().getValue("repository"))
+//			return;
+		Configuration configuration = new Configuration().configure(new File("/opt/rules/hibernate.cfg.xml"));
 		configuration.addAnnotatedClass(SyslogMessage.class);
 
 		this.sessionFactory = configuration.buildSessionFactory();
@@ -55,8 +55,8 @@ public class Repository {
 
 	public void save(Object storable) {
 
-		if (!SystemProperties.getInstance().getValue("repository"))
-			return;
+//		if (!SystemProperties.getInstance().getValue("repository"))
+//			return;
 
 		try {
 			Session session = sessionFactory.openSession();
@@ -67,6 +67,7 @@ public class Repository {
 			session.close();
 			System.out.println(storable);
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			((SQLException) e.getCause()).getNextException().printStackTrace();
 		}
 	}

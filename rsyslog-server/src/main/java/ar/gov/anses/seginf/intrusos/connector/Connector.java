@@ -4,10 +4,10 @@ import ar.gov.anses.seginf.intrusos.convert.SyslogMessage;
 
 public interface Connector {
 
-	public StandardMessage parseMessage(byte[] bytes);
+	public SyslogMessage parseMessage(byte[] bytes);
 
 	public String toString(SyslogMessage message);
 	
-	public StandardMessage parseMessageIfMine(byte[] bytes);
+	public SyslogMessage parseMessageIfMine(byte[] bytes);
 
 }

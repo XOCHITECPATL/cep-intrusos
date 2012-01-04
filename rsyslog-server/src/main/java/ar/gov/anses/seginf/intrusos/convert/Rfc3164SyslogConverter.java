@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.gov.anses.seginf.intrusos.connector.Connector;
-import ar.gov.anses.seginf.intrusos.connector.StandardMessage;
 
 public final class Rfc3164SyslogConverter implements Connector {
 
@@ -261,7 +260,7 @@ public final class Rfc3164SyslogConverter implements Connector {
 	 * PERDOOOOON!!! es una tramoyeta horrible para que pueda persistir!!
 	 * @param syslogMessage
 	 */
-	private void solveEncodingProblems(StandardMessage syslogMessage) {
+	private void solveEncodingProblems(SyslogMessage syslogMessage) {
 		syslogMessage.setFacility(String.valueOf(syslogMessage.getFacility()).replace('\0', ' '));
 		syslogMessage.setHostname(String.valueOf(syslogMessage.getHostname()).replace('\0', ' '));
 		syslogMessage.setLocalAddress(String.valueOf(syslogMessage.getLocalAddress()).replace('\0', ' '));
@@ -271,7 +270,7 @@ public final class Rfc3164SyslogConverter implements Connector {
 		
 	}
 
-	public StandardMessage parseMessageIfMine(byte[] bytes) {
+	public SyslogMessage parseMessageIfMine(byte[] bytes) {
 		return this.parseMessage(bytes);
 	}
 }

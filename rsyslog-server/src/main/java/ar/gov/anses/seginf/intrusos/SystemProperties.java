@@ -27,7 +27,7 @@ public class SystemProperties {
 		this.properties = new Properties();
 		try {
 			properties.load(new FileInputStream(
-					"src/main/resources/config.properties"));
+					"/opt/rules/config.properties"));
 			System.out.println("Configuration Loaded");
 
 		} catch (IOException e) {
